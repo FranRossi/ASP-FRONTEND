@@ -85,6 +85,7 @@ export default function SalesPage() {
   const [filteringDate, setFilteringDate] = useState(false);
   const [focus, setFocus] = useState(START_DATE);
   const companyId = localStorage.getItem('company-id');
+  const email = localStorage.getItem('email');
 
   const handleFocusChange = (newFocus) => {
     setFocus(newFocus || START_DATE);
@@ -115,7 +116,8 @@ export default function SalesPage() {
   };
 
   const handleNewReport = async () => {
-    const result = await getCompanyReport('company/', companyId);
+    let url = 'report/' + email;
+    const result = await getCompanyReport(url, companyId);
     if (
       result.statusCode === 400 ||
       result.statusCode === 500 ||
