@@ -80,6 +80,7 @@ function applySortFilter(array, comparator, query) {
 
 export default function ProductPage() {
   const companyId = localStorage.getItem('company-id');
+  const email = localStorage.getItem('email');
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -129,8 +130,10 @@ export default function ProductPage() {
   };
 
   
-  const handleSubscribeProduct = async (isSubcribing) => {
-    const result = await manageSubscriptionToProduct('products/', productId, companyId, isSubcribing);
+  const handleSubscriptionProduct = async (isSubcribing) => {
+    let url = 'products/'
+    url += isSubcribing ? 'subscribe' : 'unsubscribe';
+    const result = await manageSubscriptionToProduct(url, productId, companyId, email);
     if (
       result.statusCode === 400 ||
       result.statusCode === 500 ||
@@ -434,11 +437,11 @@ export default function ProductPage() {
           },
         }}
       >
-         <MenuItem onClick={() => handleSubscribeProduct(true)}>
+         <MenuItem onClick={() => handleSubscriptionProduct(true)}>
           <Iconify icon={'eva:email-outline'} sx={{ mr: 2 }} />
           {messages.subscribe.defaultMessage}
         </MenuItem>
-        <MenuItem onClick={() => handleSubscribeProduct(false)}>
+        <MenuItem onClick={() => handleSubscriptionProduct(false)}>
           <Iconify icon={'eva:email-fill'} sx={{ mr: 2 }} />
           {messages.unSubscribe.defaultMessage}
         </MenuItem>

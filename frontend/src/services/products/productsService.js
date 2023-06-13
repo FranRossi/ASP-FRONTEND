@@ -53,15 +53,15 @@ export const editProduct = async (url, id, data, companyId) => {
 };
 
 
-export const manageSubscriptionToProduct = async (url, productId, companyId, isSubcribing) => {
-  const completeUrl = baseUrl + url + productId;
+export const manageSubscriptionToProduct = async (url, productId, companyId, email) => {
+  //add query params to completeUrl
+  const completeUrl = baseUrl + url + '?productId=' +productId + '&email=' + email;
   const response = await fetch(completeUrl, {
     method: 'POST',
     headers: {
       'company-id': companyId,
       Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
     },
-    body: JSON.stringify({ isSubcribing }),
   });
 
   const result = await response.json();
