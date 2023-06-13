@@ -55,7 +55,7 @@ export const editProduct = async (url, id, data, companyId) => {
 
 export const manageSubscriptionToProduct = async (url, productId, companyId, email) => {
   //add query params to completeUrl
-  const completeUrl = baseUrl + url + '?productId=' +productId + '&email=' + email;
+  const completeUrl = baseUrl + url + '?productId=' +productId + '&userEmail=' + email;
   const response = await fetch(completeUrl, {
     method: 'POST',
     headers: {
