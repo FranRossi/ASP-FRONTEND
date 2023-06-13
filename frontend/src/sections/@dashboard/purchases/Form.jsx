@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { es } from 'date-fns/locale';
+import Checkbox from '@mui/material/Checkbox';
 import { DatePicker } from 'react-nice-dates';
 import { useQuery } from 'react-query';
 import 'react-nice-dates/build/style.css';
@@ -14,6 +15,8 @@ import {
   Alert,
   Button,
   Typography,
+  FormGroup,
+  FormControlLabel,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
@@ -37,6 +40,11 @@ export default function Form({
   const [successMessage, setSuccessMessage] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [clientName, setClientName] = useState('');
+  const [programDate, setProgramDate] = useState(false);
+
+  const handleCheckBoxChange = (event) => {
+    setProgramDate(event.target.checked);
+  };
 
   const { data: productsStored } = useQuery('getProductsStored', () =>
     getData(`products`),
@@ -85,8 +93,8 @@ export default function Form({
       ({ productId, quantity }) => ({ productId, quantity }),
     );
     const result = isCreatingSale
-      ? sendSale(productsWithoutPrice)
-      : sendPurchase(productsWithoutPrice);
+      ? await sendSale(productsWithoutPrice)
+      : await sendPurchase(productsWithoutPrice);
     if (
       result.statusCode === 400 ||
       result.statusCode === 500 ||
@@ -106,13 +114,24 @@ export default function Form({
   };
 
   const sendSale = async (productsWithoutPrice) => {
-    const sale = {
+    let sale = {
       date: date,
       client: clientName,
       saleProducts: productsWithoutPrice,
       totalAmount: totalPrice,
     };
-
+    if (programDate) {
+      if (date <= new Date()) {
+        let response = {
+          statusCode: 400,
+          message:  'La fecha programada debe ser posterior a la fecha actual',
+        };
+        return response;
+      } else {
+        sale.programDate = date;
+        sale.date = null;
+      }
+    }
     return await createSale('sales', sale, companyId);
   };
 
@@ -157,6 +176,21 @@ export default function Form({
   return (
     <Box component="form" autoComplete="off">
       <Stack spacing={3}>
+        {isCreatingSale && (
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={programDate}
+                  onChange={handleCheckBoxChange}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+              }
+              label="Es una venta programada"
+            />
+          </FormGroup>
+        )}
+
         <DatePicker
           date={date}
           onDateChange={(value) => {
