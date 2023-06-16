@@ -116,8 +116,8 @@ export default function SalesPage() {
   };
 
   const handleNewReport = async () => {
-    let url = 'report/' + email;
-    const result = await getCompanyReport(url, companyId);
+    let url = 'report/';
+    const result = await getCompanyReport(url, email, companyId);
     if (
       result.statusCode === 400 ||
       result.statusCode === 500 ||

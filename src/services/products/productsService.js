@@ -52,10 +52,15 @@ export const editProduct = async (url, id, data, companyId) => {
   return result;
 };
 
-
-export const manageSubscriptionToProduct = async (url, productId, companyId, email) => {
+export const manageSubscriptionToProduct = async (
+  url,
+  productId,
+  companyId,
+  email,
+) => {
   //add query params to completeUrl
-  const completeUrl = baseUrl + url + '?productId=' +productId + '&userEmail=' + email;
+  const completeUrl =
+    baseUrl + url + '?productId=' + productId + '&email=' + email;
   const response = await fetch(completeUrl, {
     method: 'POST',
     headers: {
@@ -66,9 +71,10 @@ export const manageSubscriptionToProduct = async (url, productId, companyId, ema
 
   const result = await response.json();
   return result;
-} 
+};
 
-export const notifyStock = async (url, productId, companyId) => {
+/*export const notifyStock = async (url, productId, userEmail, companyId) => {
+
   const completeUrl = baseUrl + url + productId;
   const response = await fetch(completeUrl, {
     method: 'POST',
@@ -80,4 +86,4 @@ export const notifyStock = async (url, productId, companyId) => {
 
   const result = await response.json();
   return result;
-}
+};*/

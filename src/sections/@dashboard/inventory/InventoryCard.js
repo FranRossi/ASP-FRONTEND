@@ -12,7 +12,7 @@ import {
 import { styled } from '@mui/material/styles';
 // utils
 import { fCurrency } from '../../../utils/formatNumber';
-import { notifyStock } from 'src/services/products/productsService';
+import { manageSubscriptionToProduct } from 'src/services/products/productsService';
 import { useState } from 'react';
 // components
 
@@ -38,8 +38,14 @@ export default function ShopProductCard({ product }) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
+  const email = localStorage.getItem('email');
   const handleNotifyStock = async () => {
-    const result = await notifyStock('products/', _id, companyId);
+    const result = await manageSubscriptionToProduct(
+      'products/unavailable/',
+      _id,
+      companyId,
+      email,
+    );
     if (
       result.statusCode === 400 ||
       result.statusCode === 500 ||
@@ -128,7 +134,7 @@ export default function ShopProductCard({ product }) {
           transform: 'translateX(-50%)',
         }}
       >
-        {errorMessage !== null  && successMessage === null ? (
+        {errorMessage !== null && successMessage === null ? (
           <Alert severity="error">{errorMessage}</Alert>
         ) : (
           <Alert severity="success">{successMessage}</Alert>

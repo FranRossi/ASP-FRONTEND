@@ -13,9 +13,8 @@ export const getCompany = async (url, companyId) => {
   return result;
 };
 
-
-export const getCompanyReport = async (url, companyId) => {
-  const completeUrl = baseUrl + url;
+export const getCompanyReport = async (url, email, companyId) => {
+  const completeUrl = baseUrl + url + '?email=' + email;
   const response = await fetch(completeUrl, {
     method: 'GET',
     headers: {
