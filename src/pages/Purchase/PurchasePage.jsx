@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { DateRangePickerCalendar, START_DATE } from 'react-nice-dates';
 import 'react-nice-dates/build/style.css';
 import { useQuery, useQueryClient } from 'react-query';
 import { filter } from 'lodash';
@@ -16,9 +17,11 @@ import {
   TablePagination,
   Stack,
   Button,
+  Popover,
 } from '@mui/material';
 import Scrollbar from '../../components/scrollbar';
 import { SaleListToolbar, SaleListHead } from 'src/sections/@dashboard/sales';
+import { es } from 'date-fns/locale';
 import { getData } from 'src/services/api';
 import { useState } from 'react';
 import Iconify from 'src/components/iconify/Iconify';
@@ -48,6 +51,16 @@ function getComparator(order, orderBy) {
 }
 
 function applySortFilter(array, comparator, query, startDate, endDate) {
+  if (startDate && endDate) {
+    const filteredArray = array?.filter((purchase) => {
+      const purchaseDate = new Date(purchase.date);
+      return (
+        (!startDate || purchaseDate >= startDate) &&
+        (!endDate || purchaseDate <= endDate)
+      );
+    });
+    array = filteredArray;
+  }
   const stabilizedThis = array?.map((el, index) => [el, index]);
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -68,6 +81,9 @@ function applySortFilter(array, comparator, query, startDate, endDate) {
 export default function PurchasePage() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [filteringDate, setFilteringDate] = useState(false);
+  const [focus, setFocus] = useState(START_DATE);
+  const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('provider');
@@ -75,6 +91,10 @@ export default function PurchasePage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [isCreating, setIsCreating] = useState(false);
   const companyId = localStorage.getItem('company-id');
+
+  const handleFocusChange = (newFocus) => {
+    setFocus(newFocus || START_DATE);
+  };
 
   const queryClient = useQueryClient();
 
@@ -111,9 +131,20 @@ export default function PurchasePage() {
     setIsCreating(true);
   };
 
+  const handleFilterDate = (event) => {
+    setOpen(event.currentTarget);
+  };
+
+  const handleCloseFilterDate = () => {
+    setOpen(null);
+    setFilteringDate(true);
+    setPage(0);
+  };
+
   const onHandleClearDate = () => {
     setStartDate(null);
     setEndDate(null);
+    setFilteringDate(false);
     setPage(0);
   };
 
@@ -166,6 +197,8 @@ export default function PurchasePage() {
               <SaleListToolbar
                 filterName={filterName}
                 onFilterName={handleFilterByName}
+                onHandleFilterDate={handleFilterDate}
+                onHandleClearDate={onHandleClearDate}
               />
 
               <Scrollbar>
@@ -177,6 +210,35 @@ export default function PurchasePage() {
                       headLabel={TABLE_HEAD}
                       onRequestSort={handleRequestSort}
                     />
+                    <Popover
+                      open={Boolean(open)}
+                      anchorEl={open}
+                      onClose={handleCloseFilterDate}
+                      anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                      PaperProps={{
+                        sx: {
+                          p: 1,
+                          width: 260,
+                          height: 380,
+                          '& .MuiMenuItem-root': {
+                            px: 1,
+                            typography: 'body2',
+                            borderRadius: 0.75,
+                          },
+                        },
+                      }}
+                    >
+                      <DateRangePickerCalendar
+                        startDate={startDate}
+                        endDate={endDate}
+                        focus={focus}
+                        onStartDateChange={setStartDate}
+                        onEndDateChange={setEndDate}
+                        onFocusChange={handleFocusChange}
+                        locale={es}
+                      />
+                    </Popover>
                     <TableBody>
                       {filteredPurchases
                         ?.slice(

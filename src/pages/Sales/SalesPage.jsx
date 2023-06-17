@@ -29,6 +29,7 @@ import { SaleListToolbar, SaleListHead } from 'src/sections/@dashboard/sales';
 import { es } from 'date-fns/locale';
 import { getData } from 'src/services/api';
 import { getCompanyReport } from 'src/services/companies/companiesService';
+import DashboardAppPage from '../Dashboard/DashboardAppPage';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Client', alignRight: false },
@@ -394,6 +395,7 @@ export default function SalesPage() {
                 <Alert severity="success">{successMessage}</Alert>
               )}
             </Snackbar>
+            <DashboardAppPage/>
           </>
         )}
       </Container>
