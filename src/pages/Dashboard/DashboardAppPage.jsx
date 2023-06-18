@@ -40,7 +40,6 @@ export default function DashboardAppPage() {
       <Container maxWidth="xl" >
         <Grid container spacing={3} justify="center" alignItems="center" style={{ marginTop: '60px' }}>
 
-          
           <Grid item xs={12} md={6} lg={10}>
           <Typography variant="h4">{'Sales Chart'}</Typography>
           

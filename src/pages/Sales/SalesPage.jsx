@@ -2,7 +2,7 @@ import { DateRangePickerCalendar, START_DATE } from 'react-nice-dates';
 import 'react-nice-dates/build/style.css';
 import { useQuery, useQueryClient } from 'react-query';
 import { Helmet } from 'react-helmet-async';
-import { filter, property } from 'lodash';
+import { filter, map } from 'lodash';
 import { useState } from 'react';
 import { messages } from './messages';
 import Iconify from '../../components/iconify';
@@ -55,8 +55,14 @@ function getComparator(order, orderBy) {
 }
 
 function applySortFilter(array, comparator, query, startDate, endDate) {
+  array = map(array, (item) => {
+    if(item.programDate) {
+      item.date = item.programDate;
+    }
+    return item;
+  });
   if (startDate && endDate) {
-    const filteredArray = array?.filter((sale) => {
+    const filteredArray = array?.filter((sale) => {   
       const saleDate = new Date(sale.date);
       return (
         (!startDate || saleDate >= startDate) &&
@@ -65,6 +71,8 @@ function applySortFilter(array, comparator, query, startDate, endDate) {
     });
     array = filteredArray;
   }
+  //if there is programDate, set date to programDate to each item on array
+  
   const stabilizedThis = array?.map((el, index) => [el, index]);
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -169,12 +177,6 @@ export default function SalesPage() {
     setPage(0);
   };
 
-  const formatDate = (date) => {
-    const dateFormated = date.toDateString();
-    const dateArray = dateFormated.split(' ');
-    const reversedDate = `${dateArray[3]} ${dateArray[1]} ${dateArray[2]}`;
-    return reversedDate;
-  };
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - sales?.length) : 0;

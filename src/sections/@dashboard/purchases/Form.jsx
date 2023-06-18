@@ -32,6 +32,7 @@ export default function Form({
   isCreatingSale,
 }) {
   const [date, setDate] = useState(new Date());
+  const [dateFormatted, setDateFormatted] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [totalPrice, setTotalPrice] = useState(0);
   const [isAboutToFinish, setIsAboutToFinish] = useState(false);
   const [productsToSend, setProductsToSend] = useState([]);
@@ -40,10 +41,10 @@ export default function Form({
   const [successMessage, setSuccessMessage] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [clientName, setClientName] = useState('');
-  const [programDate, setProgramDate] = useState(false);
+  const [programSale, setProgramSale] = useState(false);
 
   const handleCheckBoxChange = (event) => {
-    setProgramDate(event.target.checked);
+    setProgramSale(event.target.checked);
   };
 
   const { data: productsStored } = useQuery('getProductsStored', () =>
@@ -115,20 +116,25 @@ export default function Form({
 
   const sendSale = async (productsWithoutPrice) => {
     let sale = {
-      date: date,
+      date: dateFormatted,
       client: clientName,
       saleProducts: productsWithoutPrice,
       totalAmount: totalPrice,
     };
-    if (programDate) {
-      if (date <= new Date()) {
-        let response = {
+    const currentDate = new Date();
+    if (programSale) {
+      if (
+        date.getFullYear() < currentDate.getFullYear() ||
+        date.getMonth() < currentDate.getMonth() ||
+        date.getDate() < currentDate.getDate()
+      ) {
+        return {
           statusCode: 400,
-          message:  'La fecha programada debe ser posterior a la fecha actual',
+          message: 'La fecha programada debe ser posterior a la fecha actual',
         };
-        return response;
+       
       } else {
-        sale.programDate = date;
+        sale.programDate = dateFormatted;
         sale.date = null;
       }
     }
@@ -147,6 +153,7 @@ export default function Form({
 
   const formatDate = (dateSelected) => {
     const dateFormatted = format(dateSelected, 'yyyy-MM-dd', { locale: es });
+    setDateFormatted(dateFormatted);
     setDate(dateSelected);
   };
 
@@ -181,7 +188,7 @@ export default function Form({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={programDate}
+                  checked={programSale}
                   onChange={handleCheckBoxChange}
                   inputProps={{ 'aria-label': 'controlled' }}
                 />
