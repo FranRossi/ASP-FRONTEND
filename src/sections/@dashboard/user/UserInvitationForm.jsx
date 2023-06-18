@@ -28,6 +28,7 @@ export default function UserInvitationForm({ companyId, handleDoneInviting }) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [companyName, setCompanyName] = useState('');
+  const emailLogged = localStorage.getItem('email');
   const rolesToSelect = [
     { value: 'admin', label: 'Admin' },
     { value: 'user', label: 'Employee' },
@@ -64,10 +65,11 @@ export default function UserInvitationForm({ companyId, handleDoneInviting }) {
   };
 
   const sendInvitation = async () => {
+
     const invitation = {
       email: email,
       role: roleToSend.value,
-      company: companyId,
+      senderEmail: emailLogged,
     };
     return await createInvitation('invitations', invitation, companyId);
   };

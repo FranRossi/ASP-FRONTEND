@@ -14,6 +14,7 @@ import ProviderPage from './pages/Provider/ProviderPage';
 import NewProviderPage from './pages/Provider/NewProviderPage';
 import PurchasePage from './pages/Purchase/PurchasePage';
 import WelcomeInvitationPage from './pages/Invitation/WelcomeInvitationPage';
+import SalesPage from './pages/Sales/SalesPage';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +36,7 @@ export default function Router() {
         ),
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
+        { path: 'app', element: <SalesPage /> },
         {
           path: 'user',
           element: isAdminLoggedIn ? <UserPage /> : <Navigate to="/login" />,
