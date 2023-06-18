@@ -71,8 +71,7 @@ function applySortFilter(array, comparator, query, startDate, endDate) {
     });
     array = filteredArray;
   }
-  //if there is programDate, set date to programDate to each item on array
-  
+
   const stabilizedThis = array?.map((el, index) => [el, index]);
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
