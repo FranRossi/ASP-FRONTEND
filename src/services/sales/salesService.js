@@ -1,16 +1,5 @@
 import { baseUrl } from '../baseService';
 
-export const getSales = async (companyId) => {
-  fetch(baseUrl + 'sales/')
-    .then((response) => response.json())
-    .then((result) => {
-      return result;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-
 export const getProductSales = async (url, companyId) => {
   const completeUrl = baseUrl + url;
   const response = await fetch(completeUrl, {
