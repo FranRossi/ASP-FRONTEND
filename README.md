@@ -1,50 +1,74 @@
-Objetivo
+# ASP-Frontend
 
-Este proyecto contiene la API para una aplicacion de gestion de inventario para empresas. Esta aplicación recibe todas las solicitudes de la aplicación frontend y las maneja según corresponda.
+ASP-Frontend is a React.js application based on the Minimal Dashboard Free template ([link to template](https://mui.com/store/items/minimal-dashboard-free/)). It provides a minimalistic and responsive user interface for managing products, inventory, suppliers, sales, and purchases.
 
-Se realizo una plataforma para la gestion de productos de empresas que venden a clientes y compran a proveedores.
+## Features
 
-Descripción
-Para esta primera versión del sistema, se ha determinado construir una arquitectura monolítica nativa en la nube. Donde el lenguaje utilizado es JavaScript, siendo lo que para el FrontEnd se utilizó la biblioteca React, que es una biblioteca JavaScript de código abierto para desarrollar interfaces de usuario. Por su parte, para el BackEnd se utiliza Typescript y NestJS como entorno de ejecución de Node.
+- Product Management: Add, update, and remove products with images.
+- Inventory Management: Track the quantity and availability of products and subscribe when stock reachs 0.
+- Supplier Management: Add providers.
+- Sales: Record and monitor sales transactions.
+- Purchases: Manage purchase orders and inventory restocking.
 
-La aplicacion permite:
-- El registro de un usuario de rol Administrador. 
-- El registro de otros usiarios mediante una invitacion.
-- La autenticacion de usuarios. 
-- La gestion de productos (alta, baja y modificacion).
-- La gestion de proveedores (alta, baja y modificacion).
-- El registro de compras.
-- El registro de ventas. 
-- La gestion de inventario luego de ventas y compras. 
-- La visualizacion de los 3 productos mas vendidos. 
-- La consultas de compras a proveedores especificos. 
+## Prerequisites
 
-Instalación
-Primero, debe clonar o descargar el repositorio de GitHub en su computadora. Los enlaces para el repositorio se encuentran en la documentación.
+Before running the ASP-Frontend application, ensure that you have the following installed:
 
-En la carpeta raíz, agregue un archivo .env. Este archivo se utiliza para configurar las variables de entorno. Debe agregar las siguientes variables, con los valores correspondientes (puede encontrarlas en el archivo .env.example):
+- Node.js (version we used 19.8.1): [Installation Guide](https://nodejs.org)
 
-```
-MONGO_URI=
-COMPANY_BD_URL=
-APP_PORT=
-SECRET_JWT=
-MAIL_AUTH_USER = 
-MAIL_AUTH_PASS = 
-QUEUE_HOST=
-QUEUE_PORT= 
-REDIS_USER =
-REDIS_PASSWORD = 
-RELIC_LICENSE_KEY=
-AWS_S3_KEY_ID = 
-AWS_S3_ACCESS_KEY_SECRET = 
-AWS_SESSION_TOKEN = 
-AWS_S3_BUCKET = 
-URL_BASE=
+## Getting Started
+
+Follow these steps to get started with the ASP-Frontend application:
+
+1. Clone the repository:
+
+```shell
+git clone https://github.com/FranRossi/ASP-FRONTEND.git
+cd ASP-Frontend
 ```
 
-- Para ejecutar esta aplicación en el FrontEnd:
+2. Install the dependencies:
 
+```shell
+yarn
 ```
-yarn start:dev
+
+3. Set api-gateway url:
+
+Under src/services/baseService.js
+Change the value of the variable "baseURL" or leave like that if you already have the api-gateway running on localhost:3000
+
+
+4. Start the application:
+
+```shell
+yarn start
 ```
+
+
+
+## Usage example
+
+After loggin in you have access to the main page, where you can see the main features of the application.
+
+On the left you have the sidebar, where you can navigate through the different sections of the application.
+
+### Product Management
+
+In this section you can see the list of products, add new products, edit existing products and delete products.
+
+You have a button to add a new product, which will open a modal where you can add the product's information and upload an image.
+
+After adding a product, you can edit, delete, subscribe or unsubscribe it by clicking on the three dots button on the right of the product's row. This will open a modal where you can perform the action you want.
+
+### Inventory Management
+
+
+After having a product listed, you can navigate to Inventory section, where you can see the list of products and their stock.
+
+To subscribe to a product, you can click on the subscribe button on the top right section of the product card.
+
+
+### Sales Management
+
+To create a programmated sale you can click on the "New Sale" button on the top right section of the sales list. This will open a modal where you can select the products you want to include in the sale, the date of the sale and you must click on the "Es una venta programada" checkbox to program the sale for the future.
